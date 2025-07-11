@@ -1,0 +1,118 @@
+GOAL:
+Build a prototype demo app that simulates a 'Cost Optimization Framework for Legacy SaaS Apps'*
+this prototype should include an “AI Opportunity Layer” — initial goal is to be able to showcase this via a link to my GitHub portfolio or better if possible linking directly via something like LinkedIn or job boards as I'm looking to catch attention of prospective employers.  
+*to clarify showcase this should include both interactive web app and static report capability 
+
+
+Suggested Tech Stack (Beginner-Friendly)
+Area			Tool/Language	 
+IDE			Cursor
+Backend			Python (Flask or Streamlit) - for now go with Streamlit 
+Frontend/UI		Streamlit (recommended)	
+Data			CSV/JSON (mock data)	
+AI Features		I will decide but follow best practices for creating a config file for API keys, etc.
+Docs/Presentation	PowerPoint (I will create this)	 
+
+
+Outline - 
+for info purposes - here is the Concept (PM Work)
+•	the concept is to develop a tool to help w/quantifying criteria for retiring vs replatforming vs replacing features based on below metrics 
+
+
+
+new recommended analyzer calulation 
+value_score = (
+    (usage_per_month * user_satisfaction_score)
+    / (infra_cost + support_cost + underutilization_penalty)
+)
+
+Here’s what each term could represent (mocked or estimated):
+
+Metric	Description
+usage_per_month	How much the app is used (mocked metric)
+user_satisfaction_score	Simple 1–5 scale (e.g., from feedback or NPS)
+infra_cost	Hosting/infrastructure cost (mocked $/month)
+support_cost	Multiply # of support tickets × average resolution cost
+underutilization_penalty	Penalty for low active usage compared to licenses purchased
+
+
+✍️ 1. Create the Mock Dataset using below as an example for single month - annualize this example w/somewhat similar but random numbers per each month of 12 months
+usage_per_month = 12000
+user_satisfaction_score = 4.2
+infra_cost = 3000
+support_cases = 15
+avg_support_cost = 50
+support_cost = support_cases * avg_support_cost  # = 750
+underutilization_penalty = 500
+
+value_score = (usage_per_month * user_satisfaction_score) / (infra_cost + support_cost + underutilization_penalty)
+
+Store this as data/legacy_features.csv
+ 
+________________________________________
+💻 2. Build the Interactive Demo App (in Cursor)  - add "# comments where helpful for a beginner programmer"
+a. App UI (Streamlit)
+# app.py
+import streamlit as st
+import pandas as pd
+from modules.analyzer import analyze_features
+st.title("Legacy SaaS Cost Optimization Tool")
+
+data = pd.read_csv("data/legacy_features.csv")
+st.dataframe(data)
+
+if st.button("Run Analysis"):
+    result = analyze_features(data)
+    st.dataframe(result)
+
+b. Analyzer Module
+# modules/analyzer.py
+def analyze_features(df):
+    df['value_score'] = (df['usage_per_month'] / df['infra_cost']) - df['support_tickets']
+    df['action'] = df['value_score'].apply(lambda x: 'Retire' if x < 0 else 'Keep/Improve')
+    return df
+
+
+________________________________________
+🔥 3. Create Heatmap of Cost vs Value 
+If you're feeling more technical, use matplotlib or seaborn to plot:
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+4. - use the following as guidelines but highlight and ask about possible different opinions on following "best practice" security and recommendations  - 
+Updated Project Structure with Best Practices
+cost-optimization-demo/
+│
+├── app.py                      ✅ Main app script (safe to upload)
+│
+├── modules/                    ✅ Folder for business logic
+│   ├── analyzer.py             ✅ Cost/value logic
+│   └── ai_layer.py             ✅ AI suggestion logic
+│
+├── data/
+│   └── legacy_features.csv     ✅ Mock data (safe to upload)
+│
+├── assets/
+│   └── heatmap.png             ✅ Optional chart image
+│
+├── .env                        🚫 ❗ API keys go here (NEVER upload this!)
+│
+├── .gitignore                  ✅ Tells Git to ignore sensitive files
+│
+├── requirements.txt            ✅ Python libraries needed to run the app
+│
+├── README.md                   ✅ Explains your project
+│
+└── playbook.md                 ✅ Your PM strategy doc (safe to upload)
+________________________________________
+🚫 Sensitive Info You Should NOT Upload
+Info Type	Example	Where to store it	Why not upload?
+API Keys	OPENAI_API_KEY=sk-abc...	.env file	Someone could steal your API access (and cost you money!)
+Secret tokens	Any login or token	.env	Private credentials = potential security breach
+Personal data	Real user data	Don’t include it	Legal/privacy risks
+
+also highlight sensitive files that should be included in "gitigore" like 'api keys', etc
+end of prompt information for this first step
+
+
