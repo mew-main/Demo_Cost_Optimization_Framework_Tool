@@ -1,0 +1,8 @@
+feature_name,theme,usage_per_month,user_satisfaction_score,infra_cost,support_tickets,avg_support_cost,underutilization_penalty
+Summary Page,GUI,2000,5,5000,30,10,0
+Detail Page,GUI,150,3,5000,50,10,1
+Comparison Page, GUI,1000,4,5000,10,0
+Export Reports,Reports,200,2,20000,10,1
+Status Changes,Push Events,10000,4,10000,5,50,0
+Data Change Events,Push Events,5000,3,10000,20,50,1
+ 
